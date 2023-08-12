@@ -3,7 +3,7 @@ import React from 'react'
 import { useFonts } from 'expo-font';
 
 
-export default CustomButton = ({ text, width, borderColor, backgroundColor, color, onPress }) => {
+export default CustomButton = ({ text, width, borderColor, backgroundColor, color, onPress,fontSize }) => {
     const [loaded] = useFonts({
         "Poppins-Medium": require('../assets/fonts/Poppins-Medium.ttf'),
     });
@@ -23,11 +23,12 @@ export default CustomButton = ({ text, width, borderColor, backgroundColor, colo
                 borderWidth: 1,
                 alignItems: "center",
                 justifyContent: "center",
-                display: "flex"
+                display: "flex",
+                marginBottom:40
             }}
         >
             <Text style={{
-                fontSize: 20,
+                fontSize: fontSize,
                 fontFamily: "Poppins-Medium",
                 color: color,
             }}>

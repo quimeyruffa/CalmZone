@@ -1,2 +1,3 @@
 import CustomButton from "./CustomButton";
-export {CustomButton};
+import Form from "./Form/Form";
+export {CustomButton, Form};
