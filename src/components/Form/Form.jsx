@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, Alert } from "react-native";
 import { Formik } from "formik";
 import React from "react";
 import FormStyles from "./Form.styles";
@@ -27,9 +27,10 @@ import { COLOR } from "../../constants";
 // });
 
 export default Form = ({
+  width,
+  schema,
   objInitialValues,
   inputValues,
-  schema,
   textButton,
 }) => {
   return (
@@ -71,7 +72,7 @@ export default Form = ({
           <View style={FormStyles.containerButton}>
             <CustomButton
               text={textButton}
-              width={171}
+              width={width}
               fontSize={16}
               borderColor={COLOR.primary}
               backgroundColor={COLOR.primary}
@@ -84,3 +85,5 @@ export default Form = ({
     </Formik>
   );
 };
+//secureTextEntry={true}
+//                  keyboardType='numeric'

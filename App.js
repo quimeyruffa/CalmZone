@@ -1,20 +1,13 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ROUTES } from './src/constants';
-import { Home, Login } from './src/screens';
+import { Provider } from "react-redux";
+import { store } from "./src/redux/store";
+import Control from "./src/Control";
 
-const Stack = createNativeStackNavigator();
-
-export default function App() {
-
- 
+export default App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home'>
-        <Stack.Screen name={ROUTES.LOGIN} component={Login} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <Control />
+    </Provider>
   );
-}
+};
 
 

@@ -1,3 +1,5 @@
 import CustomButton from "./CustomButton";
 import Form from "./Form/Form";
-export {CustomButton, Form};
+import UserData from "./UserData/UserData";
+import Tabs from "./Tabs/Tabs";
+export { CustomButton, Form, UserData, Tabs };

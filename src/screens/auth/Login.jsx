@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 import * as Google from "expo-auth-session/providers/google";
@@ -12,6 +11,7 @@ import { CustomButton, Form } from "../../components";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import * as Yup from "yup";
+import {  useDispatch } from "react-redux";
 
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
@@ -58,6 +58,8 @@ const inputValues = [
 ];
 
 export default Login = () => {
+  const dispatch = useDispatch();
+
   const [appleAuthAvailable, setAppleAuthAvailable] = useState(false);
   const [userToken, setUserToken] = useState();
 
@@ -84,6 +86,7 @@ export default Login = () => {
         const credentialJson = await SecureStore.getItemAsync(
           "apple-credentials"
         );
+        dispatch(tokenSlice.actions.save(credentialJson))
         setUserToken(JSON.parse(credentialJson));
       }
     };
@@ -91,7 +94,6 @@ export default Login = () => {
   }, []);
 
   useEffect(() => {
-    console.log(response);
     if (response?.type === "success") {
       setAccessToken(response.authentication.accessToken);
     }
@@ -106,7 +108,6 @@ export default Login = () => {
     );
 
     userInfoResponse.json().then((data) => {
-      console.log(data);
       setUserInfo(data);
     });
   };
@@ -119,8 +120,10 @@ export default Login = () => {
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       });
-      console.log(credential);
+
       setUserToken(credential);
+      
+      dispatch(tokenSlice.actions.save(credential))
       SecureStore.setItemAsync("apple-credentials", JSON.stringify(credential));
     } catch (e) {
       console.log(e);
@@ -184,6 +187,7 @@ export default Login = () => {
         objInitialValues={objInitialValues}
         inputValues={inputValues}
         schema={SignupSchema}
+        width={171}
         textButton="Iniciar Sesion"
       />
       <View style={styles.buttonContainer}>
@@ -196,7 +200,6 @@ export default Login = () => {
           fontSize={16}
           onPress={() => promptAsync({ useProxy: true, showInRecents: true })}
         />
-        
         {appleAuthAvailable && getAppleAuthContent()}
         <Text style={styles.textRegister}>No tenes una cuenta? Registrate</Text>
       </View>
@@ -211,9 +214,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonContainer:{
-    position:"absolute",
-    bottom:0
+  buttonContainer: {
+    position: "absolute",
+    bottom: 0,
   },
   buttonApple: {
     width: 366,
@@ -223,10 +226,10 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
   },
-  textRegister:{
-    display:"flex",
-    alignItems:"center",
-    justifyContent:"center",
-    marginBottom:40
-  }
+  textRegister: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 40,
+  },
 });
