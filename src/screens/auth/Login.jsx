@@ -1,17 +1,25 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useEffect, useState } from "react";
 import * as Google from "expo-auth-session/providers/google";
 
 import * as AppleAuthentication from "expo-apple-authentication";
 import jwtDecode from "jwt-decode";
 import * as SecureStore from "expo-secure-store";
-import { COLOR } from "../../constants";
+import { COLOR, ROUTES } from "../../constants";
 import { CustomButton, Form } from "../../components";
 
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import * as Yup from "yup";
-import {  useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
@@ -43,6 +51,7 @@ const inputValues = [
   {
     name: "password",
     placeholder: "Password",
+    login: true,
     icon: (
       <Feather
         name="unlock"
@@ -57,7 +66,7 @@ const inputValues = [
   },
 ];
 
-export default Login = () => {
+export default Login = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const [appleAuthAvailable, setAppleAuthAvailable] = useState(false);
@@ -86,7 +95,7 @@ export default Login = () => {
         const credentialJson = await SecureStore.getItemAsync(
           "apple-credentials"
         );
-        dispatch(tokenSlice.actions.save(credentialJson))
+        dispatch(tokenSlice.actions.save(credentialJson));
         setUserToken(JSON.parse(credentialJson));
       }
     };
@@ -96,6 +105,8 @@ export default Login = () => {
   useEffect(() => {
     if (response?.type === "success") {
       setAccessToken(response.authentication.accessToken);
+      console.log(response.authentication);
+      dispatch(tokenSlice.actions.save(response.authentication));
     }
   }, [response]);
 
@@ -122,8 +133,8 @@ export default Login = () => {
       });
 
       setUserToken(credential);
-      
-      dispatch(tokenSlice.actions.save(credential))
+
+      dispatch(tokenSlice.actions.save(credential));
       SecureStore.setItemAsync("apple-credentials", JSON.stringify(credential));
     } catch (e) {
       console.log(e);
@@ -166,7 +177,6 @@ export default Login = () => {
       );
     } else {
       const decoded = jwtDecode(userToken.identityToken);
-      console.log(decoded);
       const current = Date.now() / 1000;
       return (
         <View>
@@ -181,15 +191,21 @@ export default Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text>Iniciar Sesion</Text>
-      <Form
-        objInitialValues={objInitialValues}
-        inputValues={inputValues}
-        schema={SignupSchema}
-        width={171}
-        textButton="Iniciar Sesion"
-      />
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <View>
+        <Text style={styles.title}>Iniciar Sesion</Text>
+        <Form
+          navigation={navigation}
+          objInitialValues={objInitialValues}
+          inputValues={inputValues}
+          schema={SignupSchema}
+          width={171}
+          textButton="Iniciar Sesion"
+        />
+      </View>
       <View style={styles.buttonContainer}>
         <CustomButton
           text="Continuar con Google"
@@ -201,9 +217,17 @@ export default Login = () => {
           onPress={() => promptAsync({ useProxy: true, showInRecents: true })}
         />
         {appleAuthAvailable && getAppleAuthContent()}
-        <Text style={styles.textRegister}>No tenes una cuenta? Registrate</Text>
+        <TouchableOpacity
+          style={styles.textRegister}
+          onPress={() => navigation.navigate(ROUTES.REGISTER)}
+        >
+          <Text style={styles.textRegister}>
+            No tenes una cuenta?{" "}
+            <Text style={{ color: "#3644C0" }}>Registrate</Text>
+          </Text>
+        </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -231,5 +255,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 40,
+    fontWeight: "bold",
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: "bold",
+    position: "relative",
+    marginBottom: 20,
   },
 });

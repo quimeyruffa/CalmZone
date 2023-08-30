@@ -9,16 +9,14 @@ import { Tabs } from "./components";
 
 export default Control = () => {
   const token = useSelector((state) => state.token);
-console.log(token)
+console.log("token",token)
   useEffect(() => {
     handleGetToken();
   }, []);
 
   const handleGetToken = async () => {
     const credentialJson = await SecureStore.getItemAsync("apple-credentials");
-    console.log(JSON.parse(credentialJson));
-
-    console.log(jwtDecode(JSON.parse(credentialJson)))
+    console.log(credentialJson);
   };
 
   if (!token.token) {

@@ -1,9 +1,9 @@
-import { View, Text, TextInput, Alert } from "react-native";
+import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
 import { Formik } from "formik";
 import React from "react";
 import FormStyles from "./Form.styles";
 import CustomButton from "../CustomButton";
-import { COLOR } from "../../constants";
+import { COLOR, ROUTES } from "../../constants";
 
 // const SignupSchema = Yup.object({
 // firstName: Yup.string()
@@ -32,6 +32,7 @@ export default Form = ({
   objInitialValues,
   inputValues,
   textButton,
+  navigation,
 }) => {
   return (
     <Formik
@@ -66,6 +67,23 @@ export default Form = ({
               </View>
               {touched[item.name] && errors[item.name] && (
                 <Text style={FormStyles.inputError}>{errors[item.name]}</Text>
+              )}
+              {item?.login && (
+                <TouchableOpacity
+                  onPress={() => navigation.navigate(ROUTES.FORGOT_PASSWORD)}
+                >
+                  <Text
+                    style={{
+                      position: "absolute",
+                      bottom: -5,
+                      right: 0,
+                      color: "#3644C0",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Olvidaste tu contraseña?
+                  </Text>
+                </TouchableOpacity>
               )}
             </View>
           ))}

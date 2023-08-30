@@ -1,11 +1,15 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import * as Yup from "yup";
 
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+
 import { Form } from "../../components";
+import { COLOR, ROUTES } from "../../constants";
+
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const SignupSchema = Yup.object({
   firstName: Yup.string().required("Required"),
@@ -93,17 +97,32 @@ const inputValues = [
   },
 ];
 
-export default Register = () => {
+export default Register = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <Form
-        objInitialValues={objInitialValues}
-        inputValues={inputValues}
-        schema={SignupSchema}
-        textButton="Crear Cuenta"
-        width={171}
-      />
-    </View>
+    <>
+      <TouchableOpacity
+        style={styles.arrowButton}
+        onPress={() => navigation.navigate(ROUTES.LOGIN)}
+      >
+        <Ionicons
+          name="arrow-back-circle-sharp"
+          size={40}
+          color={COLOR.primary}
+        />
+      </TouchableOpacity>
+      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
+        <View>
+          <Text style={styles.title}>Registrarse</Text>
+          <Form
+            objInitialValues={objInitialValues}
+            inputValues={inputValues}
+            schema={SignupSchema}
+            textButton="Crear Cuenta"
+            width={171}
+          />
+        </View>
+      </KeyboardAwareScrollView>
+    </>
   );
 };
 const styles = StyleSheet.create({
@@ -112,5 +131,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-  }
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: "bold",
+    position: "relative",
+    marginBottom: 20,
+  },
+  arrowButton: {
+    paddingTop: 20,
+    paddingLeft: 30,
+    backgroundColor: "#fff",
+  },
 });
