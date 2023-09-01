@@ -5,6 +5,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { CustomButton } from "../../../components";
 import { COLOR } from "../../../constants";
+import styles from "./EmergenyContact.styles";
 const userContacts = [
   {
     name: "Marcela Baltron",
@@ -19,19 +20,24 @@ const userContacts = [
 ];
 export default EmergencyContact = () => {
   return (
-    <View>
+    <View style={styles.container}>
+       <Text style={{ fontSize: 30, color: COLOR.baseWhite, paddingBottom: 10 }}>
+       Contactos de emergencia
+      </Text>
+      <View style={styles.container_profile}>
+
       {userContacts.map((contact, index) => (
-        <View style={{ display: "flex", flexDirection: "row" }}>
-          <Ionicons name="person" size={68} color="black" />
+        <View style={{ display: "flex", flexDirection: "row", marginBottom:30 }}>
+          <Ionicons name="person" size={68} color="black" style={{marginRight:20}}/>
           <View>
-            <Text>{contact.name}</Text>
-            <View style={{ display: "flex", flexDirection: "row" }}>
+            <Text style={{fontWeight:"bold", marginBottom:10}}>{contact.name}</Text>
+            <View style={{ display: "flex", flexDirection: "row", marginBottom:10 }}>
             <AntDesign name="user" size={24} color="black" />
               <Text>{contact.contactType}</Text>
             </View>
             <View style={{ display: "flex", flexDirection: "row" }}>
-            <FontAwesome5 name="whatsapp" size={24} color="black" />
-              <Text>{contact.wpp}</Text>
+            <FontAwesome5 name="whatsapp" size={24} color="green" />
+              <Text>  {contact.wpp}</Text>
             </View>
           </View>
         </View>
@@ -45,6 +51,7 @@ export default EmergencyContact = () => {
               color={COLOR.baseWhite}
             //   onPress={handleSubmit}
             />
+      </View>
     </View>
   );
 };

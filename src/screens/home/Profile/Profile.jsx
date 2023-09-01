@@ -1,18 +1,30 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
 import styles from "./Profile.style";
 import { Ionicons } from "@expo/vector-icons";
 import { CustomButton, UserData } from "../../../components";
 import { COLOR } from "../../../constants";
-import { useDispatch } from "react-redux";
-const userData = [
-  { id: 1, placeholder: "Nombre", data: "Esteban Gonzalez" },
-  { id: 2, placeholder: "Telefono", data: "11 6554 - 5034" },
-  { id: 3, placeholder: "Email", data: "estebangonzalez@gmail.com" },
-];
+import { useDispatch, useSelector } from "react-redux";
+import jwtDecode from "jwt-decode";
+
 export default Profile = () => {
   const dispatch = useDispatch();
+  const [user, setUser] = useState({});
+  const [picture, setPicture] = useState(null);
+  const userDataValue = useSelector((state) => state.userData);
+  const token = useSelector((state) => state.token);
 
+  const userData = [
+    { id: 1, placeholder: "Nombre", data: user?.name ?  user?.name  : "Esteban Gonzalez" },
+    { id: 2, placeholder: "Telefono", data: "11 6554 - 5034" },
+    { id: 3, placeholder: "Email", data: user?.email },
+  ];
+  console.log(user);
+
+  React.useEffect(() => {
+    setUser(userDataValue.user_data);
+    console.log("profile", userDataValue)
+  }, [userDataValue]);
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 30, color: COLOR.baseWhite, paddingBottom: 10 }}>
@@ -22,13 +34,21 @@ export default Profile = () => {
         <View>
           <View style={styles.container_UserData}>
             <View style={{ paddingRight: 30 }}>
-              <Ionicons name="person" size={68} color="black" />
+              {picture ? (
+                <Image
+                  source={{
+                    uri: user?.picture,
+                  }}
+                />
+              ) : (
+                <Ionicons name="person" size={68} color="black" />
+              )}
             </View>
             <View>
               <Text style={[styles.fontSize, { fontFamily: "Poppins-Medium" }]}>
                 Hola!
               </Text>
-              <Text style={styles.fontSize_Name}>Esteban Gonzalez</Text>
+              <Text style={styles.fontSize_Name}>{user?.name ?  user?.name  : "Esteban Gonzalez"}</Text>
             </View>
           </View>
           <CustomButton
@@ -42,7 +62,11 @@ export default Profile = () => {
           />
         </View>
         {userData.map((user) => (
-          <UserData key={user.id} placeholder={user.placeholder} data={user.data} />
+          <UserData
+            key={user.id}
+            placeholder={user.placeholder}
+            data={user.data}
+          />
         ))}
         <View style={{ marginTop: 20 }}>
           <CustomButton
@@ -52,7 +76,7 @@ export default Profile = () => {
             backgroundColor={COLOR.lightRed}
             color={COLOR.darkRed}
             fontSize={16}
-             onPress={() =>  dispatch(tokenSlice.actions.logout())}
+            onPress={() => dispatch(tokenSlice.actions.logout())}
           />
 
           <TouchableOpacity style={styles.container_ButtonDeleteAccount}>

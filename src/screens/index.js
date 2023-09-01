@@ -1,6 +1,6 @@
 // export {default as SettingsDetail} from './home/SettingsDetail';
 // export {default as Settings} from './home/Settings';
-export {default as Home} from './home/Home';
+export {default as Home} from "./home/Home/Home"
 export {default as Profile} from './home/Profile/Profile';
 export {default as EmergencyContact} from './home/EmergencyContact/EmergencyContact';
 

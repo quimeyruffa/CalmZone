@@ -105,12 +105,16 @@ export default Login = ({ navigation }) => {
   useEffect(() => {
     if (response?.type === "success") {
       setAccessToken(response.authentication.accessToken);
-      console.log(response.authentication);
+      SecureStore.setItemAsync(
+        "apple-credentials",
+        JSON.stringify(response.authentication)
+      );
+      getUserData(response.authentication.accessToken);
       dispatch(tokenSlice.actions.save(response.authentication));
     }
   }, [response]);
 
-  const getUserData = async () => {
+  const getUserData = async (accessToken) => {
     let userInfoResponse = await fetch(
       "https://www.googleapis.com/userinfo/v2/me",
       {
@@ -119,6 +123,8 @@ export default Login = ({ navigation }) => {
     );
 
     userInfoResponse.json().then((data) => {
+      dispatch(userSlice.actions.save(data));
+      SecureStore.setItemAsync("user_data", JSON.stringify(data));
       setUserInfo(data);
     });
   };
@@ -133,7 +139,13 @@ export default Login = ({ navigation }) => {
       });
 
       setUserToken(credential);
-
+      console.log(credential)
+      // getCredentialState(credential.user)
+      dispatch(userSlice.actions.save(jwtDecode(credential.identityToken)));
+      SecureStore.setItemAsync(
+        "user_data",
+        JSON.stringify(jwtDecode(credential.identityToken))
+      );
       dispatch(tokenSlice.actions.save(credential));
       SecureStore.setItemAsync("apple-credentials", JSON.stringify(credential));
     } catch (e) {
@@ -141,11 +153,11 @@ export default Login = ({ navigation }) => {
     }
   };
 
-  const getCredentialState = async () => {
+  const getCredentialState = async (user) => {
     const credentialState = await AppleAuthentication.getCredentialStateAsync(
-      userToken.user
+      user
     );
-    console.log(credentialState);
+    console.log("Credential state", credentialState);
   };
 
   const logout = async () => {

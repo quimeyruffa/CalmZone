@@ -5,5 +5,6 @@ export default{
     grayLight:'#E3E5E5',
     darkRed:"#D3180C",
     lightRed:"#FFE5E5",
-    darkRed:"#D3180C"
+    darkRed:"#D3180C",
+    selectScreem:"#FFC436"
 }

@@ -2,8 +2,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View } from "react-native";
 import React from "react";
 import { COLOR, ROUTES } from "../../constants";
-import { EmergencyContact, Profile } from "../../screens";
-
+import { EmergencyContact, Home, Profile } from "../../screens";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -22,6 +22,21 @@ export default Tabs = () => {
       }}
     >
       <Tab.Screen
+        name={ROUTES.HOME}
+        component={Home}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View>
+              <MaterialCommunityIcons
+                name="home-outline"
+                size={30}
+                color={focused ? COLOR.selectScreem : COLOR.grayLight}
+              />
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
         name={ROUTES.PROFILE}
         component={Profile}
         options={{
@@ -30,7 +45,7 @@ export default Tabs = () => {
               <Ionicons
                 name="person-outline"
                 size={24}
-                color={focused ? "blue" : COLOR.grayLight}
+                color={focused ? COLOR.selectScreem : COLOR.grayLight}
               />
             </View>
           ),
@@ -45,7 +60,7 @@ export default Tabs = () => {
               <AntDesign
                 name="hearto"
                 size={24}
-                color={focused ? "yellow" : COLOR.grayLight}
+                color={focused ? COLOR.selectScreem : COLOR.grayLight}
               />
             </View>
           ),

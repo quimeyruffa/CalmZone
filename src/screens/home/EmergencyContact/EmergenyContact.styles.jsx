@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "flex-end",
+    justifyContent:"flex-end",
     backgroundColor: COLOR.primary,
   },
   container_profile: {
@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     borderTopStartRadius: 40,
     display: "flex",
     alignItems: "center",
+    paddingTop:30
   },
   container_UserData: {
     width: 340,
@@ -27,12 +28,14 @@ const styles = StyleSheet.create({
   },
   fontSize: {
     fontSize: 30,
+    fontFamily: "Poppins",
     color: COLOR.dark,
     fontWeight: "bold",
   },
   fontSize_Name: {
     fontSize: 14,
     fontWeight: "bold",
+    fontFamily: "Poppins",
     color: COLOR.dark,
   },
   container_moreInformation: {
