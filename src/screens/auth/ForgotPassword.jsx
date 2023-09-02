@@ -3,11 +3,12 @@ import React from "react";
 import * as Yup from "yup";
 import Svg, { Circle, Rect } from "react-native-svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
+IMPO
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Form } from "../../components";
 import { COLOR, ROUTES } from "../../constants";
+import SVGComponent from "./SVGPASS";
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
 });
@@ -67,7 +68,7 @@ export default ForgotPassword = ({ navigation }) => {
         Te enviaremos un mail para restablercer la contraseña
       </Text>
       <Form
-      event={user_token}
+      event={sendData}
         objInitialValues={objInitialValues}
         inputValues={inputValues}
         schema={SignupSchema}
