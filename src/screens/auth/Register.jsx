@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useRef } from "react";
 import * as Yup from "yup";
 
 import { AntDesign } from "@expo/vector-icons";
@@ -91,6 +91,7 @@ const inputValues = [
 ];
 
 export default Register = ({ navigation }) => {
+  let scroll = useRef();
   const sendData = async (values) => {
     const val = JSON.parse(values);
     await fetch(
@@ -116,6 +117,11 @@ export default Register = ({ navigation }) => {
       });
   };
 
+  function _scrollToInput(reactNode) {
+    // Add a 'scroll' ref to your ScrollView
+    scroll = reactNode;
+  }
+
   return (
     <>
       <TouchableOpacity
@@ -128,8 +134,12 @@ export default Register = ({ navigation }) => {
           color={COLOR.primary}
         />
       </TouchableOpacity>
-      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
-        <SVGComponentRegister />
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.scroll}
+      >
+        <View style={styles.container}>
+
+        <SVGComponentRegister height={130} />
         <View>
           <Text style={styles.title}>Registrarse</Text>
           <Form
@@ -141,11 +151,16 @@ export default Register = ({ navigation }) => {
             width={171}
           />
         </View>
+        </View>
       </KeyboardAwareScrollView>
     </>
   );
 };
 const styles = StyleSheet.create({
+  scroll:{
+    backgroundColor: "#fff",
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
