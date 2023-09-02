@@ -33,12 +33,15 @@ export default Form = ({
   inputValues,
   textButton,
   navigation,
+  event,
 }) => {
   return (
     <Formik
       initialValues={objInitialValues}
       validationSchema={schema}
-      onSubmit={(values) => Alert.alert(JSON.stringify(values))}
+      onSubmit={(values) => {
+        event(JSON.stringify(values));
+      }}
     >
       {({
         values,

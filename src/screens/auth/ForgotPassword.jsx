@@ -5,11 +5,9 @@ import Svg, { Circle, Rect } from "react-native-svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Form } from "../../components";
 import { COLOR, ROUTES } from "../../constants";
-
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
 });
@@ -35,6 +33,19 @@ const inputValues = [
 ];
 
 export default ForgotPassword = ({ navigation }) => {
+  const sendData = async (value) =>{
+    await fetch("http://ec2-54-211-47-153.compute-1.amazonaws.com:3000/api/v1.1/auth/resetpassword", {
+      method: "POST", // or 'PUT'
+      body: JSON.stringify(value), // data can be `string` or {object}!
+      headers: {
+        "Content-Type": "application/json",
+        "access_token": user_token
+      },
+    })
+      .then((res) => res.json())
+      .catch((error) => console.error("Error:", error))
+      .then((response) => console.log("Success:", response));
+  }
   return (
     <KeyboardAwareScrollView  contentContainerStyle={styles.container}>
    
@@ -49,20 +60,14 @@ export default ForgotPassword = ({ navigation }) => {
         />
       </TouchableOpacity>
 
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Svg width="100" height="100">
-          <Circle cx="50" cy="50" r="40" fill="blue" />
-        </Svg>
-
-        <Svg width="100" height="100">
-          <Rect width="80" height="60" fill="green" />
-        </Svg>
-      </View>
+      <SVGComponent width={300} height={200} marginBottom={20}/>
+     
       <Text style={styles.title}>Cambiar Contraseña</Text>
       <Text style={styles.subTitle}>
         Te enviaremos un mail para restablercer la contraseña
       </Text>
       <Form
+      event={user_token}
         objInitialValues={objInitialValues}
         inputValues={inputValues}
         schema={SignupSchema}

@@ -132,6 +132,7 @@ export default Login = ({ navigation }) => {
   const login = async () => {
     try {
       const credential = await AppleAuthentication.signInAsync({
+
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
@@ -139,7 +140,7 @@ export default Login = ({ navigation }) => {
       });
 
       setUserToken(credential);
-      console.log(credential)
+      console.log(credential);
       // getCredentialState(credential.user)
       dispatch(userSlice.actions.save(jwtDecode(credential.identityToken)));
       SecureStore.setItemAsync(
@@ -202,6 +203,19 @@ export default Login = ({ navigation }) => {
     }
   };
 
+  const sendData = async (value) => {
+    await fetch("http://ec2-54-211-47-153.compute-1.amazonaws.com:3000/api/v1.1/auth/login", {
+      method: "POST", // or 'PUT'
+      body: JSON.stringify(value), // data can be `string` or {object}!
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .catch((error) => console.error("Error:", error))
+      .then((response) => console.log("Success:", response));
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -210,6 +224,7 @@ export default Login = ({ navigation }) => {
       <View>
         <Text style={styles.title}>Iniciar Sesion</Text>
         <Form
+          event={sendData}
           navigation={navigation}
           objInitialValues={objInitialValues}
           inputValues={inputValues}
