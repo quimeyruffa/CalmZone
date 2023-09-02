@@ -29,7 +29,7 @@ export default Control = () => {
 
  
 
-  if (!token.token) {
+  if (!token?.token) {
     return (
       <NavigationContainer>
         <AuthNavigator />

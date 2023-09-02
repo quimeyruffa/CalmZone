@@ -204,16 +204,25 @@ export default Login = ({ navigation }) => {
   };
 
   const sendData = async (value) => {
+    console.log(value)
     await fetch("http://ec2-54-211-47-153.compute-1.amazonaws.com:3000/api/v1.1/auth/login", {
       method: "POST", // or 'PUT'
-      body: JSON.stringify(value), // data can be `string` or {object}!
+      body: (value), // data can be `string` or {object}!
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then((res) => res.json())
       .catch((error) => console.error("Error:", error))
-      .then((response) => console.log("Success:", response));
+      .then((response) =>{
+        SecureStore.setItemAsync(
+          "user_data",
+          JSON.stringify(response.data)
+        );
+        dispatch(userSlice.actions.save(response.data));
+        dispatch(tokenSlice.actions.save(response.data.accessToken));
+        SecureStore.setItemAsync("apple-credentials", JSON.stringify(response.data.accessToken));
+      });
   };
 
   return (

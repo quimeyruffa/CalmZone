@@ -3,7 +3,6 @@ import React from "react";
 import * as Yup from "yup";
 import Svg, { Circle, Rect } from "react-native-svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-IMPO
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Form } from "../../components";

@@ -14,16 +14,17 @@ export default Profile = () => {
   const userDataValue = useSelector((state) => state.userData);
   const token = useSelector((state) => state.token);
 
+  const userName = user?.name ?  user?.name  : user?.firstName ?`${user?.firstName} ${user?.lastName} ` :"Esteban Gonzalez"
+
   const userData = [
-    { id: 1, placeholder: "Nombre", data: user?.name ?  user?.name  : "Esteban Gonzalez" },
+    { id: 1, placeholder: "Nombre", data: userName },
     { id: 2, placeholder: "Telefono", data: "11 6554 - 5034" },
     { id: 3, placeholder: "Email", data: user?.email },
   ];
-  console.log(user);
+
 
   React.useEffect(() => {
     setUser(userDataValue.user_data);
-    console.log("profile", userDataValue)
   }, [userDataValue]);
   return (
     <View style={styles.container}>
@@ -48,7 +49,7 @@ export default Profile = () => {
               <Text style={[styles.fontSize, { fontFamily: "Poppins-Medium" }]}>
                 Hola!
               </Text>
-              <Text style={styles.fontSize_Name}>{user?.name ?  user?.name  : "Esteban Gonzalez"}</Text>
+              <Text style={styles.fontSize_Name}>{userName}</Text>
             </View>
           </View>
           <CustomButton
