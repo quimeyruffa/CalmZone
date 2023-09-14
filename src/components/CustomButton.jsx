@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 import React from 'react'
 import { useFonts } from 'expo-font';
 
@@ -11,6 +11,11 @@ export default CustomButton = ({ text, width, borderColor, backgroundColor, colo
         return null;
     }
     return (
+        <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+
         <TouchableOpacity
             onPress={onPress}
             style={{
@@ -36,5 +41,6 @@ export default CustomButton = ({ text, width, borderColor, backgroundColor, colo
                 {text}
             </Text>
         </TouchableOpacity>
+    </KeyboardAvoidingView>
     )
 }

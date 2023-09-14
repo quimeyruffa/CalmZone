@@ -34,7 +34,7 @@ const inputValues = [
 
 export default ForgotPassword = ({ navigation }) => {
   const sendData = async (value) =>{
-    await fetch("http://ec2-54-211-47-153.compute-1.amazonaws.com:3000/api/v1.1/auth/resetpassword", {
+    await fetch("http://ec2-18-209-99-116.compute-1.amazonaws.com:3000/api/v1.1/auth/resetpassword", {
       method: "POST", // or 'PUT'
       body: JSON.stringify(value), // data can be `string` or {object}!
       headers: {

@@ -95,7 +95,7 @@ export default Register = ({ navigation }) => {
   const sendData = async (values) => {
     const val = JSON.parse(values);
     await fetch(
-      "http://ec2-54-211-47-153.compute-1.amazonaws.com:3000/api/v1.1/auth/signup",
+      "http://ec2-18-209-99-116.compute-1.amazonaws.com:3000/api/v1.1/auth/signup",
       {
         method: "post",
         headers: { "Content-Type": "application/json" },

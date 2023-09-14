@@ -205,7 +205,7 @@ export default Login = ({ navigation }) => {
 
   const sendData = async (value) => {
     console.log(value)
-    await fetch("http://ec2-54-211-47-153.compute-1.amazonaws.com:3000/api/v1.1/auth/login", {
+    await fetch("http://ec2-18-209-99-116.compute-1.amazonaws.com:3000/api/v1.1/auth/login", {
       method: "POST", // or 'PUT'
       body: (value), // data can be `string` or {object}!
       headers: {
