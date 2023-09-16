@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, ImageBackground } from "react-native";
 import React, { useState } from "react";
 import styles from "./Profile.style";
 import { Ionicons } from "@expo/vector-icons";
@@ -27,7 +27,7 @@ export default Profile = () => {
     setUser(userDataValue.user_data);
   }, [userDataValue]);
   return (
-    <View style={styles.container}>
+    <View  style={styles.container}>
       <Text style={{ fontSize: 30, color: COLOR.baseWhite, paddingBottom: 10 }}>
         Perfil
       </Text>

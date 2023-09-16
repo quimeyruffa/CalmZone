@@ -4,7 +4,6 @@ import { COLOR } from "../../../constants";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "flex-end",
     backgroundColor: COLOR.primary,
@@ -18,6 +17,7 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
   },
+ 
   container_UserData: {
     width: 340,
     display: "flex",

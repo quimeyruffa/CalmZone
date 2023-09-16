@@ -21,6 +21,8 @@ import { Feather } from "@expo/vector-icons";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 
+import Toast from "react-native-toast-message";
+
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
   password: Yup.string().min(8).required("Please enter your password."),
@@ -132,7 +134,6 @@ export default Login = ({ navigation }) => {
   const login = async () => {
     try {
       const credential = await AppleAuthentication.signInAsync({
-
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
@@ -204,25 +205,56 @@ export default Login = ({ navigation }) => {
   };
 
   const sendData = async (value) => {
-    console.log(value)
-    await fetch("http://ec2-18-209-99-116.compute-1.amazonaws.com:3000/api/v1.1/auth/login", {
-      method: "POST", // or 'PUT'
-      body: (value), // data can be `string` or {object}!
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .catch((error) => console.error("Error:", error))
-      .then((response) =>{
+    try {
+      const apiUrl =
+        "http://ec2-18-209-99-116.compute-1.amazonaws.com:3000/api/v1.1/auth/login";
+
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: value,
+      };
+      const response = await fetch(apiUrl, requestOptions);
+
+      if (response.ok) {
+        Toast.show({
+          type: "success",
+          text1: "Bienvenido 👋",
+          text2: "¡Es genial tenerte con nosotros!",
+        });
+
+        const responseData = await response.json();
+        console.log("Respuesta del servidor:", console.log(responseData.data));
+
+        const res = responseData.data;
+
+        SecureStore.setItemAsync("user_data", JSON.stringify(res));
+        dispatch(userSlice.actions.save(res));
+        dispatch(tokenSlice.actions.save(res.accessToken));
         SecureStore.setItemAsync(
-          "user_data",
-          JSON.stringify(response.data)
+          "apple-credentials",
+          JSON.stringify(res.accessToken)
         );
-        dispatch(userSlice.actions.save(response.data));
-        dispatch(tokenSlice.actions.save(response.data.accessToken));
-        SecureStore.setItemAsync("apple-credentials", JSON.stringify(response.data.accessToken));
+      } else {
+        Toast.show({
+          type: "error",
+          position: "top",
+          text1: "Usuario o contraseña incorrectos",
+        });
+        console.error("Error en la solicitud:", response.status);
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+
+      Toast.show({
+        type: "error",
+        text1: "Ocurrio un error",
+        text2: "Intente nuevamente",
       });
+    }
   };
 
   return (
@@ -230,6 +262,7 @@ export default Login = ({ navigation }) => {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <Toast />
       <View>
         <Text style={styles.title}>Iniciar Sesion</Text>
         <Form

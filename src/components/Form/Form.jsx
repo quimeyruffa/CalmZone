@@ -29,6 +29,7 @@ import { COLOR, ROUTES } from "../../constants";
 export default Form = ({
   width,
   schema,
+  displayButton,
   objInitialValues,
   inputValues,
   textButton,
@@ -40,6 +41,7 @@ export default Form = ({
       initialValues={objInitialValues}
       validationSchema={schema}
       onSubmit={(values) => {
+        console.log(values)
         event(JSON.stringify(values));
       }}
     >
@@ -94,6 +96,7 @@ export default Form = ({
             <CustomButton
               text={textButton}
               width={width}
+              displayButton={displayButton}
               fontSize={16}
               borderColor={COLOR.primary}
               backgroundColor={COLOR.primary}

@@ -6,7 +6,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
-    backgroundColor: COLOR.baseWhite,
+  },
+  image: {
+    flex: 1,
+    width:"100%",
+    alignItems:"center",
+    justifyContent: "flex-end",
   },
   button_fellings: {
     backgroundColor: COLOR.primary,
@@ -17,6 +22,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+   backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover', 
+    alignItems: "center",
+    justifyContent: "flex-end",// Esto ajustará la imagen al tamaño de la pantalla
   },
   container_UserData: {
     color: "white",
@@ -54,15 +65,21 @@ const styles = StyleSheet.create({
   container_Text: {
     width: 341,
     display: "flex",
+    alignItems:"center",
     flexDirection: "row",
     marginTop: 30,
     justifyContent: "space-between",
     paddingLeft: 35,
     paddingRight: 35,
+    backgroundColor:COLOR.baseWhite,
+    borderRadius:39
+
   },
   music_icon: {
     width: 85,
     display: "flex",
+    flexDirection:"row",
+    
     alignItems: "center",
     justifyContent: "center",
   },
