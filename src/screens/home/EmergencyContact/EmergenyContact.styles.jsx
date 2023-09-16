@@ -91,6 +91,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  scroll: {
+    backgroundColor: "#fff",
+    flex: 1,
+  },
   button: {
     borderRadius: 20,
     padding: 10,

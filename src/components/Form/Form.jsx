@@ -4,7 +4,8 @@ import React from "react";
 import FormStyles from "./Form.styles";
 import CustomButton from "../CustomButton";
 import { COLOR, ROUTES } from "../../constants";
-
+import SelectDropdown from "react-native-select-dropdown";
+import { AntDesign } from '@expo/vector-icons';
 // const SignupSchema = Yup.object({
 // firstName: Yup.string()
 //   .max(15, "Must be 15 characters or less")
@@ -36,13 +37,14 @@ export default Form = ({
   navigation,
   event,
 }) => {
+  const relations = ["Profesional", "Amigo", "Amiga", "Familiar", "Otro"];
+
   return (
     <Formik
       initialValues={objInitialValues}
       validationSchema={schema}
       onSubmit={(values) => {
-        console.log(values)
-        event(JSON.stringify(values));
+        event(values);
       }}
     >
       {({
@@ -50,6 +52,7 @@ export default Form = ({
         errors,
         touched,
         handleChange,
+        setFieldValue,
         setFieldTouched,
         isValid,
         handleSubmit,
@@ -57,21 +60,58 @@ export default Form = ({
         <View>
           {inputValues.map((item, index) => (
             <View key={index + item.name}>
+              {item?.name === "relation" && (
+                <Text style={{color:"#72777A"}}>{item.placeholder}</Text>
+              )}
               <View style={FormStyles.inputContainer}>
                 {item?.icon}
-                <View>
-                  <Text style={FormStyles.inputLabel}>{item.placeholder}</Text>
-                  <TextInput
-                    style={FormStyles.input}
-                    autoCapitalize={false}
-                    onChangeText={handleChange(item.name)}
-                    value={values[item.name]}
-                    onBlur={() => setFieldTouched(values[item.name])}
-                  />
-                </View>
+                {item?.name !== "relation" ? (
+                  <>
+                    <View>
+                      <Text style={FormStyles.inputLabel}>
+                        {item.placeholder}
+                      </Text>
+                      <TextInput
+                        style={FormStyles.input}
+                        autoCapitalize={false}
+                        onChangeText={handleChange(item.name)}
+                        value={values[item.name]}
+                        onBlur={() => setFieldTouched(values[item.name])}
+                      />
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <SelectDropdown
+                    defaultButtonText={"Selecciona una opción"}
+                      buttonStyle={{
+                        backgroundColor: COLOR.baseWhite,
+                        height: "100%",
+                        width: 280,
+                      }}
+                      buttonTextStyle={{
+                        color:"#72777A"
+                      }}
+                      renderDropdownIcon={() =><AntDesign name="down" size={24} color={COLOR.primary} />}
+                      data={relations}
+                      onSelect={(selectedItem, index) => {
+                        setFieldValue(item.name, selectedItem);
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem;
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item;
+                      }}
+                    />
+                  </>
+                )}
               </View>
-              {touched[item.name] && errors[item.name] && (
+
+              {touched[item.name] && errors[item.name] ? (
                 <Text style={FormStyles.inputError}>{errors[item.name]}</Text>
+              ) : (
+                <Text style={FormStyles.inputHandlerError}></Text>
               )}
               {item?.login && (
                 <TouchableOpacity

@@ -12,7 +12,6 @@ export default styles = StyleSheet.create({
     borderColor:COLOR.primary,
     borderStyle:"solid",
     borderWidth:2,
-    marginBottom:30
   },
   inputIcon:{
     marginLeft:5,
@@ -31,9 +30,16 @@ export default styles = StyleSheet.create({
     fontSize:16
   },
   inputError:{
-    position:"absolute",
-    bottom:10,
+    maxWidth:280,
+    minHeight:20,
+    bottom:0,
+    margin:0,
     color:COLOR.darkRed
+  },
+  inputHandlerError:{
+    maxWidth:280,
+    height:20,
+    color:COLOR.baseWhite
   },
   containerButton:{
     display:"flex",

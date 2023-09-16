@@ -215,10 +215,9 @@ export default Login = ({ navigation }) => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: value,
+        body: JSON.stringify(value),
       };
       const response = await fetch(apiUrl, requestOptions);
-
       if (response.ok) {
         Toast.show({
           type: "success",

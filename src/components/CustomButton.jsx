@@ -10,6 +10,7 @@ export default CustomButton = ({ text, width, borderColor, backgroundColor, colo
     if (!loaded) {
         return null;
     }
+
     return (
         <KeyboardAvoidingView
       style={styles.container}
