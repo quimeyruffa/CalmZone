@@ -94,7 +94,9 @@ const inputValues = [
 
 export default Register = ({ navigation }) => {
   const sendData = async (values) => {
-    const val = JSON.parse(values);
+    console.log(values)
+    console.log(values.firstName)
+    const val = (values);
     try {
       const apiUrl =
         "http://ec2-18-209-99-116.compute-1.amazonaws.com:3000/api/v1.1/auth/signup";

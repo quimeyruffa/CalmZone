@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Alert, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Alert, TouchableOpacity, Keyboard, TouchableWithoutFeedback, ScrollView } from "react-native";
 import { Formik } from "formik";
 import React from "react";
 import FormStyles from "./Form.styles";
@@ -58,11 +58,12 @@ export default Form = ({
         handleSubmit,
       }) => (
         <View>
+
           {inputValues.map((item, index) => (
             <View key={index + item.name}>
               {item?.name === "relation" && (
                 <Text style={{color:"#72777A"}}>{item.placeholder}</Text>
-              )}
+                )}
               <View style={FormStyles.inputContainer}>
                 {item?.icon}
                 {item?.name !== "relation" ? (
@@ -75,7 +76,7 @@ export default Form = ({
                         style={FormStyles.input}
                         autoCapitalize={false}
                         onChangeText={handleChange(item.name)}
-                        value={values[item.name]}
+                        value={values[item.name] || item.value}
                         onBlur={() => setFieldTouched(values[item.name])}
                       />
                     </View>
@@ -83,7 +84,7 @@ export default Form = ({
                 ) : (
                   <>
                     <SelectDropdown
-                    defaultButtonText={"Selecciona una opción"}
+                    defaultButtonText={item.value ? item.value : "Selecciona una opción"}
                       buttonStyle={{
                         backgroundColor: COLOR.baseWhite,
                         height: "100%",
@@ -147,6 +148,7 @@ export default Form = ({
         </View>
       )}
     </Formik>
+
   );
 };
 //secureTextEntry={true}

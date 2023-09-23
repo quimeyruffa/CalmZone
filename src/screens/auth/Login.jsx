@@ -22,6 +22,7 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 
 import Toast from "react-native-toast-message";
+import SVGComponentRegister from "./registerSVG";
 
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
@@ -113,6 +114,7 @@ export default Login = ({ navigation }) => {
       );
       getUserData(response.authentication.accessToken);
       dispatch(tokenSlice.actions.save(response.authentication));
+  
     }
   }, [response]);
 
@@ -226,7 +228,6 @@ export default Login = ({ navigation }) => {
         });
 
         const responseData = await response.json();
-        console.log("Respuesta del servidor:", console.log(responseData.data));
 
         const res = responseData.data;
 
@@ -238,14 +239,19 @@ export default Login = ({ navigation }) => {
           JSON.stringify(res.accessToken)
         );
       } else {
+        
         Toast.show({
           type: "error",
           position: "top",
           text1: "Usuario o contraseña incorrectos",
         });
+
         console.error("Error en la solicitud:", response.status);
+
       }
+
     } catch (error) {
+
       console.error("Error en la solicitud:", error);
 
       Toast.show({
@@ -254,6 +260,7 @@ export default Login = ({ navigation }) => {
         text2: "Intente nuevamente",
       });
     }
+
   };
 
   return (
@@ -262,38 +269,41 @@ export default Login = ({ navigation }) => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <Toast />
-      <View>
-        <Text style={styles.title}>Iniciar Sesion</Text>
-        <Form
-          event={sendData}
-          navigation={navigation}
-          objInitialValues={objInitialValues}
-          inputValues={inputValues}
-          schema={SignupSchema}
-          width={171}
-          textButton="Iniciar Sesion"
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <CustomButton
-          text="Continuar con Google"
-          width={366}
-          borderColor={COLOR.grayLight}
-          backgroundColor={COLOR.baseWhite}
-          color={COLOR.dark}
-          fontSize={16}
-          onPress={() => promptAsync({ useProxy: true, showInRecents: true })}
-        />
-        {appleAuthAvailable && getAppleAuthContent()}
-        <TouchableOpacity
-          style={styles.textRegister}
-          onPress={() => navigation.navigate(ROUTES.REGISTER)}
-        >
-          <Text style={styles.textRegister}>
-            No tenes una cuenta?{" "}
-            <Text style={{ color: "#3644C0" }}>Registrate</Text>
-          </Text>
-        </TouchableOpacity>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop:50 }}>
+      <SVGComponentRegister height={130} />
+        <View style={{marginBottom:50}}>
+          <Text style={styles.title}>Iniciar Sesion</Text>
+          <Form
+            event={sendData}
+            navigation={navigation}
+            objInitialValues={objInitialValues}
+            inputValues={inputValues}
+            schema={SignupSchema}
+            width={171}
+            textButton="Iniciar Sesion"
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <CustomButton
+            text="Continuar con Google"
+            width={366}
+            borderColor={COLOR.grayLight}
+            backgroundColor={COLOR.baseWhite}
+            color={COLOR.dark}
+            fontSize={16}
+            onPress={() => promptAsync({ useProxy: true, showInRecents: true })}
+          />
+          {appleAuthAvailable && getAppleAuthContent()}
+          <TouchableOpacity
+            style={styles.textRegister}
+            onPress={() => navigation.navigate(ROUTES.REGISTER)}
+          >
+            <Text style={styles.textRegister}>
+              No tenes una cuenta?{" "}
+              <Text style={{ color: "#3644C0" }}>Registrate</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -307,7 +317,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonContainer: {
-    position: "absolute",
+    position: "relative",
     bottom: 0,
   },
   buttonApple: {

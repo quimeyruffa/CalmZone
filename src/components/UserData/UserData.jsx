@@ -5,18 +5,25 @@ import styles from "./UserData.style";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { COLOR } from "../../constants";
+import { EditUserData } from "./function.UserData";
+import { useSelector } from "react-redux";
 
-export default UserData = ({ placeholder, data, key }) => {
+export default UserData = ({ placeholder, data, key, keyVal }) => {
   const [name, setName] = useState(data);
   const [isEdit, setIsEdit] = useState(false);
+  const userDataValue = useSelector((state) => state.userData);
+  const { user_data } = userDataValue;
 
-  const handleIsEdit = () => {
+  const handleIsEdit = async () => {
+    const obj = { [keyVal]: name };
+    const res = await EditUserData(user_data.accessToken, obj);
     setIsEdit(!isEdit);
   };
 
   const handleChange = (e) => {
     setName(e);
   };
+
   return (
     <View
       key={key}

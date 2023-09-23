@@ -19,7 +19,6 @@ export default Control = () => {
     const credentials = await SecureStore.getItemAsync("apple-credentials");
     const user = await SecureStore.getItemAsync("user_data");
     if (credentials && user) {
-      console.log("llegue", credentials);
       dispatch(tokenSlice.actions.save(JSON.parse(credentials)));
       dispatch(userSlice.actions.save(JSON.parse(user)));
     }

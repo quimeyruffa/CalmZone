@@ -10,8 +10,8 @@ export const CreateContact = async (token, data, user_uid) => {
     relation: data.relation,
     firstName: data.firstName,
     lastName: data.LastName,
-    profilePictureUrl:
-      "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngwing.com%2Fen%2Fsearch%3Fq%3Dprofile&psig=AOvVaw1rgb6L8JoNCGl3QXuJ8OFY&ust=1691070342971000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCIitwIqOvoADFQAAAAAdAAAAABAT",
+    profilePictureUrl: data.profilePictureUrl ? data.profilePictureUrl :"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngwing.com%2Fen%2Fsearch%3Fq%3Dprofile&psig=AOvVaw1rgb6L8JoNCGl3QXuJ8OFY&ust=1691070342971000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCIitwIqOvoADFQAAAAAdAAAAABAT"
+      
   });
 
   var requestOptions = {
@@ -89,4 +89,34 @@ export const DeleteContact = async (token, contact_id) => {
     });
 
   return result;
+};
+
+export const EditContactData = async (token, data, id_contact) => {
+  console.log(data)
+  var myHeaders = new Headers();
+  myHeaders.append("authorization", token);
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify(data);
+
+  var requestOptions = {
+    method: "PUT",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  const res = await fetch(
+    `http://ec2-18-209-99-116.compute-1.amazonaws.com:3000/api/v1.1/user/contacts/${id_contact}`,
+    requestOptions
+  )
+    .then((response) => response.text())
+    .then((result) => {
+      return result;
+    })
+    .catch((error) => {
+      return error;
+    });
+
+    return res
 };

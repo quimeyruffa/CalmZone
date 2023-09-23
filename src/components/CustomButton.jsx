@@ -12,15 +12,13 @@ export default CustomButton = ({ text, width, borderColor, backgroundColor, colo
     }
 
     return (
-        <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+      
 
         <TouchableOpacity
             onPress={onPress}
             style={{
                 height: 48,
+                position:"relative",
                 width: width,
                 borderRadius: 48,
                 borderColor: borderColor,
@@ -29,7 +27,6 @@ export default CustomButton = ({ text, width, borderColor, backgroundColor, colo
                 borderWidth: 1,
                 alignItems: "center",
                 justifyContent: "center",
-                display: "flex",
                 marginBottom:40,
                 display: displayButton ?  displayButton : "flex" 
             }}
@@ -43,6 +40,5 @@ export default CustomButton = ({ text, width, borderColor, backgroundColor, colo
                 {text}
             </Text>
         </TouchableOpacity>
-    </KeyboardAvoidingView>
     )
 }
