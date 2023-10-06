@@ -13,6 +13,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import SVGComponentRegister from "./registerSVG";
 
 import Toast from "react-native-toast-message";
+import { URL } from "../../Entities";
 
 const SignupSchema = Yup.object({
   firstName: Yup.string().required("Required"),
@@ -94,12 +95,11 @@ const inputValues = [
 
 export default Register = ({ navigation }) => {
   const sendData = async (values) => {
-    console.log(values)
-    console.log(values.firstName)
-    const val = (values);
+    console.log(values);
+    console.log(values.firstName);
+    const val = values;
     try {
-      const apiUrl =
-        "http://ec2-18-209-99-116.compute-1.amazonaws.com:3000/api/v1.1/auth/signup";
+      const apiUrl = `${process.env.URL}/api/v1.1/auth/signup`;
 
       const requestOptions = {
         method: "POST",
@@ -163,7 +163,6 @@ export default Register = ({ navigation }) => {
           color={COLOR.primary}
         />
       </TouchableOpacity>
-   
 
       <KeyboardAwareScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.container}>
@@ -179,7 +178,7 @@ export default Register = ({ navigation }) => {
               width={171}
             />
           </View>
-      <Toast />
+          <Toast />
         </View>
       </KeyboardAwareScrollView>
     </>

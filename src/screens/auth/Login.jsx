@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 
 import Toast from "react-native-toast-message";
 import SVGComponentRegister from "./registerSVG";
+import { URL } from "../../Entities";
 
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
@@ -114,7 +115,6 @@ export default Login = ({ navigation }) => {
       );
       getUserData(response.authentication.accessToken);
       dispatch(tokenSlice.actions.save(response.authentication));
-  
     }
   }, [response]);
 
@@ -208,8 +208,7 @@ export default Login = ({ navigation }) => {
 
   const sendData = async (value) => {
     try {
-      const apiUrl =
-        "http://ec2-18-209-99-116.compute-1.amazonaws.com:3000/api/v1.1/auth/login";
+      const apiUrl = `${process.env.URL}/api/v1.1/auth/login`;
 
       const requestOptions = {
         method: "POST",
@@ -239,7 +238,6 @@ export default Login = ({ navigation }) => {
           JSON.stringify(res.accessToken)
         );
       } else {
-        
         Toast.show({
           type: "error",
           position: "top",
@@ -247,11 +245,8 @@ export default Login = ({ navigation }) => {
         });
 
         console.error("Error en la solicitud:", response.status);
-
       }
-
     } catch (error) {
-
       console.error("Error en la solicitud:", error);
 
       Toast.show({
@@ -260,7 +255,6 @@ export default Login = ({ navigation }) => {
         text2: "Intente nuevamente",
       });
     }
-
   };
 
   return (
@@ -269,9 +263,16 @@ export default Login = ({ navigation }) => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <Toast />
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop:50 }}>
-      <SVGComponentRegister height={130} />
-        <View style={{marginBottom:50}}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 50,
+        }}
+      >
+        <SVGComponentRegister height={130} />
+        <View style={{ marginBottom: 50 }}>
           <Text style={styles.title}>Iniciar Sesion</Text>
           <Form
             event={sendData}

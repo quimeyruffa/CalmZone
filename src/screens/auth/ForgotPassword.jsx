@@ -8,6 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Form } from "../../components";
 import { COLOR, ROUTES } from "../../constants";
 import SVGComponent from "./SVGPASS";
+import { URL } from "../../Entities";
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
 });
@@ -34,7 +35,7 @@ const inputValues = [
 
 export default ForgotPassword = ({ navigation }) => {
   const sendData = async (value) =>{
-    await fetch("http://ec2-18-209-99-116.compute-1.amazonaws.com:3000/api/v1.1/auth/resetpassword", {
+    await fetch(`${process.env.URL}/api/v1.1/auth/resetpassword`, {
       method: "POST", // or 'PUT'
       body: JSON.stringify(value), // data can be `string` or {object}!
       headers: {
