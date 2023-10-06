@@ -1,5 +1,3 @@
-import { URL } from "../../../Entities";
-
 export const CreateContact = async (token, data, user_uid) => {
   var myHeaders = new Headers();
   myHeaders.append("authorization", token);
