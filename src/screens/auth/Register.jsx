@@ -13,7 +13,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import SVGComponentRegister from "./registerSVG";
 
 import Toast from "react-native-toast-message";
-import { URL } from "../../Entities";
 
 const SignupSchema = Yup.object({
   firstName: Yup.string().required("Required"),

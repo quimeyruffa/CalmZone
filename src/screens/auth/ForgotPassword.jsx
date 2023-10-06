@@ -8,7 +8,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { Form } from "../../components";
 import { COLOR, ROUTES } from "../../constants";
 import SVGComponent from "./SVGPASS";
-import { URL } from "../../Entities";
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
 });

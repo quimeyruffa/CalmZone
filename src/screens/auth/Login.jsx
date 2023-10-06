@@ -23,7 +23,6 @@ import { useDispatch } from "react-redux";
 
 import Toast from "react-native-toast-message";
 import SVGComponentRegister from "./registerSVG";
-import { URL } from "../../Entities";
 
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
