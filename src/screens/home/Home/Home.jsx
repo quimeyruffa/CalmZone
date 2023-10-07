@@ -35,6 +35,7 @@ export default Home = () => {
   };
 
   const getSymptoms = async () => {
+    setModalVisible(true);
     var myHeaders = new Headers();
     myHeaders.append("authorization", user_data.accessToken);
     myHeaders.append("Content-Type", "application/json");
@@ -57,7 +58,7 @@ export default Home = () => {
       `https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/symptoms`,
       requestOptions
     )
-      .then((response) => response.text())
+      .then((response) => console.log(response.text()))
       .then((result) => {
         const res = JSON.parse(result);
         if (res.panic === true) {
