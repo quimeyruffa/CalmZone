@@ -23,7 +23,7 @@ export default Home = () => {
   const userDataValue = useSelector((state) => state.userData);
   const { user_data } = userDataValue;
   const [isModalVisible, setModalVisible] = useState(false);
-  const [isModalContact, setIsModalContact] = useState(false)
+  const [isModalContact, setIsModalContact] = useState(false);
   const [contacts, setContacts] = useState([]);
 
   const toggleModal = () => {
@@ -35,7 +35,6 @@ export default Home = () => {
   };
 
   const getSymptoms = async () => {
-    setModalVisible(true);
     var myHeaders = new Headers();
     myHeaders.append("authorization", user_data.accessToken);
     myHeaders.append("Content-Type", "application/json");
@@ -45,6 +44,14 @@ export default Home = () => {
       weight: "39",
       age: "34",
       bpm: "200",
+      sex: "0",
+      smoking: "0",
+      alcohol: "0",
+      exercise: "3",
+      stress_level: "1",
+      bmi: "0",
+      sedentary_hours: "4",
+      sleephours: "8",
     });
 
     var requestOptions = {
@@ -54,23 +61,19 @@ export default Home = () => {
       redirect: "follow",
     };
 
-    await fetch(
-      `https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/symptoms`,
+    fetch(
+      "https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/symptoms",
       requestOptions
     )
-      .then((response) => console.log(response.text()))
+      .then((response) => response.text())
       .then((result) => {
         const res = JSON.parse(result);
         if (res.panic === true) {
           setModalVisible(true);
         }
       })
-      .catch((error) => {
-        console.log("error", error);
-      });
+      .catch((error) => console.log("error", error));
   };
-
- 
 
   const image = {
     uri: "https://res.cloudinary.com/dv8hvjcim/image/upload/v1694833139/eh83xctklntydmpwxnhk.png",
@@ -97,8 +100,6 @@ export default Home = () => {
         }
       : undefined;
   }, [sound]);
-
- 
 
   return (
     <View style={styles.container}>
