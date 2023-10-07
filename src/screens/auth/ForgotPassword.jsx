@@ -1,13 +1,14 @@
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {  StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import * as Yup from "yup";
-import Svg, { Circle, Rect } from "react-native-svg";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Form } from "../../components";
 import { COLOR, ROUTES } from "../../constants";
 import SVGComponent from "./SVGPASS";
+import { REACT_APP_URL } from "@env";
+
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
 });
@@ -34,7 +35,7 @@ const inputValues = [
 
 export default ForgotPassword = ({ navigation }) => {
   const sendData = async (value) =>{
-    await fetch(`${process.env.URL}/api/v1.1/auth/resetpassword`, {
+    await fetch(`${REACT_APP_URL}/api/v1.1/auth/resetpassword`, {
       method: "POST", // or 'PUT'
       body: JSON.stringify(value), // data can be `string` or {object}!
       headers: {

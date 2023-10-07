@@ -1,3 +1,4 @@
+import { REACT_APP_URL } from "@env";
 export const CreateContact = async (token, data, user_uid) => {
   var myHeaders = new Headers();
   myHeaders.append("authorization", token);
@@ -22,7 +23,7 @@ export const CreateContact = async (token, data, user_uid) => {
   };
 
   const result = await fetch(
-  `${process.env.URL}/api/v1.1/user/contacts`,
+  `${REACT_APP_URL}/api/v1.1/user/contacts`,
     requestOptions
   )
     .then((response) => response.text())
@@ -47,7 +48,7 @@ export const GetContacts = async (token) => {
   };
 
   const result = await fetch(
-    `${process.env.URL}/api/v1.1/user/contacts`,
+    `${REACT_APP_URL}/api/v1.1/user/contacts`,
     requestOptions
   )
     .then((response) => response.text())
@@ -77,7 +78,7 @@ export const DeleteContact = async (token, contact_id) => {
   };
 
   const result = fetch(
-    `${process.env.URL}/api/v1.1/user/contacts`,
+    `${REACT_APP_URL}/api/v1.1/user/contacts`,
     requestOptions
   )
     .then((response) => response.text())
@@ -107,7 +108,7 @@ export const EditContactData = async (token, data, id_contact) => {
   };
 
   const res = await fetch(
-    `${process.env.URL}/api/v1.1/user/contacts/${id_contact}`,
+    `${REACT_APP_URL}/api/v1.1/user/contacts/${id_contact}`,
     requestOptions
   )
     .then((response) => response.text())

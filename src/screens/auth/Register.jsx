@@ -1,7 +1,7 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React, { useRef } from "react";
 import * as Yup from "yup";
-
+import { REACT_APP_URL } from "@env";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -98,7 +98,7 @@ export default Register = ({ navigation }) => {
     console.log(values.firstName);
     const val = values;
     try {
-      const apiUrl = `${process.env.URL}/api/v1.1/auth/signup`;
+      const apiUrl = `${REACT_APP_URL}/api/v1.1/auth/signup`;
 
       const requestOptions = {
         method: "POST",

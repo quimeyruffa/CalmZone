@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 
 import Toast from "react-native-toast-message";
 import SVGComponentRegister from "./registerSVG";
+import { REACT_APP_URL } from "@env";
 
 const SignupSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
@@ -207,7 +208,9 @@ export default Login = ({ navigation }) => {
 
   const sendData = async (value) => {
     try {
-      const apiUrl = `${process.env.URL}/api/v1.1/auth/login`;
+      const environment = REACT_APP_URL
+      console.log(environment)
+      const apiUrl = `${REACT_APP_URL}/api/v1.1/auth/login`;
 
       const requestOptions = {
         method: "POST",
@@ -250,8 +253,8 @@ export default Login = ({ navigation }) => {
 
       Toast.show({
         type: "error",
-        text1: "Ocurrio un error",
-        text2: "Intente nuevamente",
+        text1: error,
+        text2: error
       });
     }
   };
