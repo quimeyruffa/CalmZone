@@ -12,23 +12,26 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { COLOR } from "../../../constants";
+import { COLOR, ROUTES } from "../../../constants";
 import { Audio } from "expo-av";
 import { useSelector } from "react-redux";
 import CountdownModal from "./Counter";
 import CallContact from "./CallContact";
 import { useEffect } from "react";
-
-export default Home = () => {
+import PremiumModal from "./PremiumModal";
+import { MaterialIcons } from "@expo/vector-icons";
+export default Home = ({ navigation }) => {
   const userDataValue = useSelector((state) => state.userData);
   const [hasPermissions, setHasPermissions] = useState(false);
   const { user_data } = userDataValue;
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalContact, setIsModalContact] = useState(false);
-  const [contacts, setContacts] = useState([]);
+  const [switchPremium, setSwitchPremium] = useState(false);
   const [recording, setRecording] = useState(null);
   const [recordingStatus, setRecordingStatus] = useState("idle");
   const [audioPermission, setAudioPermission] = useState(null);
+  const [openPlanModal, setOpenPlanModal] = useState(false);
+  const [beat, setBeat] = useState(90);
 
   useEffect(() => {
     // Simply get recording permission upon first render
@@ -55,8 +58,7 @@ export default Home = () => {
 
   async function startRecording() {
     try {
-console.log("hola")
-      if (audioPermission) {
+      if (audioPermission && switchPremium) {
         await Audio.setAudioModeAsync({
           allowsRecordingIOS: true,
           playsInSilentModeIOS: true,
@@ -75,20 +77,17 @@ console.log("hola")
       console.error("Failed to start recording", error);
     }
 
-    setTimeout(async () => {
-       stopRecording();
-    }, 5000);
+    stopRecording();
   }
 
   async function stopRecording() {
     try {
-        await recording?.stopAndUnloadAsync();
-        const recordingUri = recording.getURI();
-        setRecording(null);
-        setRecordingStatus("stopped");
+      await recording?.stopAndUnloadAsync();
+      const recordingUri = recording.getURI();
+      setRecording(null);
+      setRecordingStatus("stopped");
 
-        uploadAudio(recordingUri);
-      
+      uploadAudio(recordingUri);
     } catch (error) {
       console.error("Failed to stop recording", error);
     }
@@ -124,11 +123,12 @@ console.log("hola")
     }
   };
 
-
-
   const toggleModal = () => {
-    console.log("hoel")
-    startRecording()
+    if (isModalVisible) {
+      setBeat(100);
+    } else {
+      startRecording();
+    }
     setModalVisible(!isModalVisible);
   };
 
@@ -137,6 +137,7 @@ console.log("hola")
   };
 
   const getSymptoms = async () => {
+    setBeat(115);
     var myHeaders = new Headers();
     myHeaders.append("authorization", user_data.accessToken);
     myHeaders.append("Content-Type", "application/json");
@@ -195,6 +196,10 @@ console.log("hola")
     }
   }
 
+  const togglePlanModal = () => {
+    setOpenPlanModal(false);
+  };
+
   React.useEffect(() => {
     return sound
       ? () => {
@@ -216,6 +221,12 @@ console.log("hola")
             onClose={toggleModal}
             toggleModalContact={toggleModalContact}
             playSound={playSound}
+          />
+          <PremiumModal
+            isVisible={openPlanModal}
+            onClose={togglePlanModal}
+            setSwitchPremium={setSwitchPremium}
+            switchPremium={switchPremium}
           />
           <View
             style={{
@@ -270,10 +281,10 @@ console.log("hola")
               <FontAwesome
                 name="heartbeat"
                 size={34}
-                color="white"
+                color={switchPremium ? "#FFD233" : "white"}
                 style={{ marginRight: 10 }}
               />
-              <Text style={styles.container_UserData}>120</Text>
+              <Text style={styles.container_UserData}>{beat}</Text>
             </View>
             <View style={styles.line}></View>
             <View style={styles.heartbeat}>
@@ -295,6 +306,7 @@ console.log("hola")
                 alignItems: "center",
                 justifyContent: "center",
               }}
+              onPress={() => navigation.navigate(ROUTES.EMERGENGY_CONTAC)}
             >
               <MaterialCommunityIcons
                 name="contacts"
@@ -343,13 +355,18 @@ console.log("hola")
             </View>
             <View style={styles.line}></View>
 
-            <TouchableOpacity style={styles.music_icon} onPress={playSound}>
-              <Ionicons
-                name="md-musical-notes"
+            <TouchableOpacity
+              style={styles.music_icon}
+              onPress={() => setOpenPlanModal(true)}
+            >
+              <MaterialIcons
+                name="card-membership"
                 size={40}
                 color={COLOR.primary}
               />
-              <Text style={styles.text}>Premium</Text>
+              <Text style={styles.text}>
+                {switchPremium ? "Plan Premium" : "Cambia a premium"}
+              </Text>
             </TouchableOpacity>
           </View>
 

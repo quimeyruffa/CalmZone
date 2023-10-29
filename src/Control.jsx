@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Tabs } from "./components";
 import { LogBox } from "react-native";
+import { AuthNavigator } from "./screens";
 LogBox.ignoreLogs(["Asyncstorage: ..."]); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
