@@ -16,17 +16,119 @@ import { COLOR } from "../../../constants";
 import { Audio } from "expo-av";
 import { useSelector } from "react-redux";
 import CountdownModal from "./Counter";
-import { GetContacts } from "../EmergencyContact/function.EmergencyContact";
 import CallContact from "./CallContact";
+import { useEffect } from "react";
 
 export default Home = () => {
   const userDataValue = useSelector((state) => state.userData);
+  const [hasPermissions, setHasPermissions] = useState(false);
   const { user_data } = userDataValue;
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalContact, setIsModalContact] = useState(false);
   const [contacts, setContacts] = useState([]);
+  const [recording, setRecording] = useState(null);
+  const [recordingStatus, setRecordingStatus] = useState("idle");
+  const [audioPermission, setAudioPermission] = useState(null);
+
+  useEffect(() => {
+    // Simply get recording permission upon first render
+    async function getPermission() {
+      await Audio.requestPermissionsAsync()
+        .then((permission) => {
+          console.log("Permission Granted: " + permission.granted);
+          setAudioPermission(permission.granted);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    // Call function to get permission
+    getPermission();
+    // Cleanup upon first render
+    return () => {
+      if (recording) {
+        stopRecording();
+      }
+    };
+  }, []);
+
+  async function startRecording() {
+    try {
+console.log("hola")
+      if (audioPermission) {
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: true,
+          playsInSilentModeIOS: true,
+        });
+      }
+
+      const newRecording = new Audio.Recording();
+      console.log("Starting Recording");
+      await newRecording.prepareToRecordAsync(
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
+      await newRecording.startAsync();
+      setRecording(newRecording);
+      setRecordingStatus("recording");
+    } catch (error) {
+      console.error("Failed to start recording", error);
+    }
+
+    setTimeout(async () => {
+       stopRecording();
+    }, 5000);
+  }
+
+  async function stopRecording() {
+    try {
+        await recording?.stopAndUnloadAsync();
+        const recordingUri = recording.getURI();
+        setRecording(null);
+        setRecordingStatus("stopped");
+
+        uploadAudio(recordingUri);
+      
+    } catch (error) {
+      console.error("Failed to stop recording", error);
+    }
+  }
+
+  const uploadAudio = async (uri) => {
+    try {
+      const formData = new FormData();
+      formData.append("audio", {
+        uri,
+        type: "audio/wav",
+        name: "audio.wav",
+      });
+
+      const response = await fetch(
+        "https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/symptoms",
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("Audio subido exitosamente");
+      } else {
+        console.error("Error al subir el audio");
+      }
+    } catch (error) {
+      console.error("Error al subir el audio", error);
+    }
+  };
+
+
 
   const toggleModal = () => {
+    console.log("hoel")
+    startRecording()
     setModalVisible(!isModalVisible);
   };
 
