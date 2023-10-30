@@ -23,7 +23,6 @@ const CountdownModal = ({
   }, [isVisible, countdown]);
 
   const handleHelpUser = () => {
-    playSound();
     toggleModalContact();
     onClose();
   };
