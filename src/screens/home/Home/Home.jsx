@@ -20,18 +20,39 @@ import CallContact from "./CallContact";
 import { useEffect } from "react";
 import PremiumModal from "./PremiumModal";
 import { MaterialIcons } from "@expo/vector-icons";
+
+const recordingOptions = {
+  android: {
+    extension: ".wav",
+    outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_DEFAULT,
+    audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_DEFAULT,
+    sampleRate: 44100,
+    numberOfChannels: 2,
+    bitRate: 128000,
+  },
+  ios: {
+    extension: ".wav",
+    audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_MAX,
+    sampleRate: 44100,
+    numberOfChannels: 2,
+    bitRate: 128000,
+    linearPCMBitDepth: 16,
+    linearPCMIsBigEndian: false,
+    linearPCMIsFloat: false,
+  },
+};
+
 export default Home = ({ navigation }) => {
   const userDataValue = useSelector((state) => state.userData);
-  const [hasPermissions, setHasPermissions] = useState(false);
   const { user_data } = userDataValue;
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalContact, setIsModalContact] = useState(false);
   const [switchPremium, setSwitchPremium] = useState(false);
-  const [recording, setRecording] = useState(null);
   const [recordingStatus, setRecordingStatus] = useState("idle");
   const [audioPermission, setAudioPermission] = useState(null);
   const [openPlanModal, setOpenPlanModal] = useState(false);
   const [beat, setBeat] = useState(90);
+  let recording = new Audio.Recording();
 
   useEffect(() => {
     // Simply get recording permission upon first render
@@ -57,40 +78,34 @@ export default Home = ({ navigation }) => {
   }, []);
 
   async function startRecording() {
-    console.log("llgue al la function");
-
     try {
       if (audioPermission && switchPremium) {
         await Audio.setAudioModeAsync({
-          allowsRecordingIOS: true,
-          playsInSilentModeIOS: true,
+          allowsRecordingIOS: true, // Habilita la grabación en iOS
+          playsInSilentModeIOS: true, // Permite la reproducción de audio en modo silencioso en iOS (opcional)
+          staysActiveInBackground: false, // Permite que la aplicación siga ejecutándose en segundo plano (ajusta según sea necesario)
         });
+        await Audio.requestPermissionsAsync();
+        await recording.prepareToRecordAsync(recordingOptions);
+        await recording.startAsync();
+        console.log("Starting Recording");
+
+        setRecordingStatus("recording");
+        setTimeout(function () {
+          stopRecording();
+        }, 3000);
       }
-
-      const newRecording = new Audio.Recording();
-      console.log("Starting Recording");
-      await newRecording.prepareToRecordAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-      await newRecording.startAsync();
-      setRecording(newRecording);
-
-      setRecordingStatus("recording");
-      setTimeout(function () {
-        stopRecording(newRecording);
-      }, 3000);
     } catch (error) {
       console.error("Failed to start recording", error);
     }
   }
 
-  async function stopRecording(recording) {
+  async function stopRecording() {
     console.log("Stop recording");
 
     try {
       await recording.stopAndUnloadAsync();
       const recordingUri = recording.getURI();
-      setRecording(null);
       setRecordingStatus("stopped");
 
       uploadAudio(recordingUri);
@@ -100,42 +115,39 @@ export default Home = ({ navigation }) => {
   }
 
   const uploadAudio = async (uri) => {
-    try {
-      console.log("sending...");
-      const formData = new FormData();
-      formData.append("audio", {
-        uri,
-        type: "audio/wav",
-        name: "audio.wav",
-      });
+    console.log("sending...");
+    const formData = new FormData();
+    formData.append("audio", {
+      uri,
+      type: "audio/wav",
+      name: "audio.wav",
+    });
 
-      const response = await fetch(
-        "https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/breathwav",
-        {
-          method: "POST",
-          body: formData,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log("server error", response);
-      if (response.ok) {
-        console.log("Audio subido exitosamente");
-      } else {
-        console.error("Error al subir el audio");
+    const response = await fetch(
+      "https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/breathwav",
+      {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "audio/wav",
+        },
       }
-    } catch (error) {
-      console.error("Error al subir el audio", error);
+    );
+    if (response.ok) {
+      console.log(response);
+      console.log("Audio subido exitosamente");
+    } else {
+      console.error("Error al subir el audio");
     }
   };
 
   const toggleModal = () => {
-    console.log(switchPremium);
     if (isModalVisible) {
       setBeat(100);
     }
-    startRecording();
+    if (isModalVisible && switchPremium) {
+      startRecording();
+    }
 
     setModalVisible(!isModalVisible);
   };
@@ -180,7 +192,7 @@ export default Home = ({ navigation }) => {
       .then((result) => {
         const res = JSON.parse(result);
         if (res.panic === true) {
-          setModalVisible(true);
+          toggleModal();
         }
       })
       .catch((error) => console.log("error", error));
