@@ -57,6 +57,8 @@ export default Home = ({ navigation }) => {
   }, []);
 
   async function startRecording() {
+    console.log("llgue al la function");
+
     try {
       if (audioPermission && switchPremium) {
         await Audio.setAudioModeAsync({
@@ -72,18 +74,21 @@ export default Home = ({ navigation }) => {
       );
       await newRecording.startAsync();
       setRecording(newRecording);
+
       setRecordingStatus("recording");
+      setTimeout(function () {
+        stopRecording(newRecording);
+      }, 3000);
     } catch (error) {
       console.error("Failed to start recording", error);
     }
-    setTimeout(function () {
-      stopRecording();
-    }, 3000);
   }
 
-  async function stopRecording() {
+  async function stopRecording(recording) {
+    console.log("Stop recording");
+
     try {
-      await recording?.stopAndUnloadAsync();
+      await recording.stopAndUnloadAsync();
       const recordingUri = recording.getURI();
       setRecording(null);
       setRecordingStatus("stopped");
@@ -96,6 +101,7 @@ export default Home = ({ navigation }) => {
 
   const uploadAudio = async (uri) => {
     try {
+      console.log("sending...");
       const formData = new FormData();
       formData.append("audio", {
         uri,
@@ -104,7 +110,7 @@ export default Home = ({ navigation }) => {
       });
 
       const response = await fetch(
-        "https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/symptoms",
+        "https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/breathwav",
         {
           method: "POST",
           body: formData,
@@ -113,7 +119,7 @@ export default Home = ({ navigation }) => {
           },
         }
       );
-
+      console.log("server error", response);
       if (response.ok) {
         console.log("Audio subido exitosamente");
       } else {
@@ -125,6 +131,7 @@ export default Home = ({ navigation }) => {
   };
 
   const toggleModal = () => {
+    console.log(switchPremium);
     if (isModalVisible) {
       setBeat(100);
     }

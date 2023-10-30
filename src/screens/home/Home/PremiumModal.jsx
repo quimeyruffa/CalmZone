@@ -61,11 +61,19 @@ const PremiumModal = ({
           )}
           <View style={style.container}>
             {!switchPremium ? (
+              <View>
+
               <Button
                 title="Cambiar a Premium"
                 color="#6499E9"
                 onPress={handleSwitchPlan}
+                />
+                <Button
+                title="Cerrar"
+                color="red"
+                onPress={onClose}
               />
+                </View>
             ) : (
               <Button title="Cerrar" color="#6499E9" onPress={onClose} />
             )}
