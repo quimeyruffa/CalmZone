@@ -135,9 +135,8 @@ export default Home = ({ navigation }) => {
     if (isModalVisible) {
       setBeat(100);
     }
-    if (switchPremium) {
-      startRecording();
-    }
+    startRecording();
+
     setModalVisible(!isModalVisible);
   };
 
