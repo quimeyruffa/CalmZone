@@ -20,6 +20,8 @@ import CallContact from "./CallContact";
 import { useEffect } from "react";
 import PremiumModal from "./PremiumModal";
 import { MaterialIcons } from "@expo/vector-icons";
+import * as FileSystem from 'expo-file-system';
+import axios from "axios";
 
 const recordingOptions = {
   android: {
@@ -77,6 +79,16 @@ export default Home = ({ navigation }) => {
     };
   }, []);
 
+  const blobToBase64 = (blob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    return new Promise((resolve) => {
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+    });
+  };
+
   async function startRecording() {
     try {
       if (audioPermission && switchPremium) {
@@ -106,36 +118,58 @@ export default Home = ({ navigation }) => {
     try {
       await recording.stopAndUnloadAsync();
       const recordingUri = recording.getURI();
-      console.log(recordingUri)
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function (e) {
+          reject(new TypeError("Network request failed"));
+        };
+        xhr.responseType = "blob";
+        xhr.open("GET", recordingUri, true);
+        xhr.send(null);
+      });
+
+      const audioBase64 = await blobToBase64(blob);
+      blob.close();
+
       setRecordingStatus("stopped");
 
-      uploadAudio(recordingUri);
+      await uploadAudio(recordingUri);
     } catch (error) {
       console.error("Failed to stop recording", error);
     }
   }
 
   const uploadAudio = async (uri) => {
-    console.log("sending...");
-    const formData = new FormData();
-    formData.append("audio", {
-      uri,
-      type: "audio/wav",
-      name: "audio.wav",
+    const base64Audio = await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
     });
-
-    const response = await fetch(
+    console.log(base64Audio)
+    const response = await axios.post(
       "https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/breathwav",
+      base64Audio,
       {
-        method: "POST",
-        body: formData,
         headers: {
           "Content-Type": "audio/wav",
         },
       }
     );
+    // const response = await fetch(
+    //   "https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/breathwav",
+    //   {
+    //     method: "POST",
+    //     body: formData,
+    //     headers: {
+    //       "Content-Type": "audio/wav",
+    //     },
+    //   }
+    // );
+
+    console.log(response);
     if (response.ok) {
-      console.log(response);
+      console.log(response.json());
       console.log("Audio subido exitosamente");
     } else {
       console.error("Error al subir el audio");
