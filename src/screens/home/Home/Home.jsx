@@ -3,7 +3,6 @@ import {
   Text,
   TouchableOpacity,
   ImageBackground,
-  Linking,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import styles from "./Home.style";
@@ -20,7 +19,7 @@ import CallContact from "./CallContact";
 import { useEffect } from "react";
 import PremiumModal from "./PremiumModal";
 import { MaterialIcons } from "@expo/vector-icons";
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from "expo-file-system";
 import axios from "axios";
 
 const recordingOptions = {
@@ -79,15 +78,6 @@ export default Home = ({ navigation }) => {
     };
   }, []);
 
-  const blobToBase64 = (blob) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    return new Promise((resolve) => {
-      reader.onloadend = () => {
-        resolve(reader.result);
-      };
-    });
-  };
 
   async function startRecording() {
     try {
@@ -118,21 +108,6 @@ export default Home = ({ navigation }) => {
     try {
       await recording.stopAndUnloadAsync();
       const recordingUri = recording.getURI();
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-          resolve(xhr.response);
-        };
-        xhr.onerror = function (e) {
-          reject(new TypeError("Network request failed"));
-        };
-        xhr.responseType = "blob";
-        xhr.open("GET", recordingUri, true);
-        xhr.send(null);
-      });
-
-      const audioBase64 = await blobToBase64(blob);
-      blob.close();
 
       setRecordingStatus("stopped");
 
@@ -146,31 +121,25 @@ export default Home = ({ navigation }) => {
     const base64Audio = await FileSystem.readAsStringAsync(uri, {
       encoding: FileSystem.EncodingType.Base64,
     });
-    console.log(base64Audio)
     const response = await axios.post(
-      "https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/breathwav",
-      base64Audio,
+      "https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/breathdet",
+      {
+        content: base64Audio,
+      },
       {
         headers: {
-          "Content-Type": "audio/wav",
+          "Content-Type": "application/json",
         },
       }
     );
-    // const response = await fetch(
-    //   "https://xsnvjldmi4.execute-api.us-east-1.amazonaws.com/DEV/breathwav",
-    //   {
-    //     method: "POST",
-    //     body: formData,
-    //     headers: {
-    //       "Content-Type": "audio/wav",
-    //     },
-    //   }
-    // );
 
-    console.log(response);
-    if (response.ok) {
-      console.log(response.json());
+
+    if (response.status === 200) {
       console.log("Audio subido exitosamente");
+      console.log(response.data); // Guardar el cuerpo de la respuesta
+      if (response.data.panicaudio) {
+        playSound();
+      }
     } else {
       console.error("Error al subir el audio");
     }
