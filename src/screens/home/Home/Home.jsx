@@ -76,8 +76,9 @@ export default Home = ({ navigation }) => {
     } catch (error) {
       console.error("Failed to start recording", error);
     }
-
-    stopRecording();
+    setTimeout(function () {
+      stopRecording();
+    }, 3000);
   }
 
   async function stopRecording() {
@@ -126,7 +127,8 @@ export default Home = ({ navigation }) => {
   const toggleModal = () => {
     if (isModalVisible) {
       setBeat(100);
-    } else {
+    }
+    if (switchPremium) {
       startRecording();
     }
     setModalVisible(!isModalVisible);
