@@ -106,6 +106,7 @@ export default Home = ({ navigation }) => {
     try {
       await recording.stopAndUnloadAsync();
       const recordingUri = recording.getURI();
+      console.log(recordingUri)
       setRecordingStatus("stopped");
 
       uploadAudio(recordingUri);
@@ -145,7 +146,7 @@ export default Home = ({ navigation }) => {
     if (isModalVisible) {
       setBeat(100);
     }
-    if (isModalVisible && switchPremium) {
+    if (!isModalVisible && switchPremium) {
       startRecording();
     }
 
